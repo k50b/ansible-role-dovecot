@@ -28,11 +28,6 @@ dovecot_privkey_path: /etc/ssl/private/ssl-cert-snakeoil.key
 dovecot_submission_hostname: mail.example.com
 ```
 
-Example Playbook
-----------------
-
-
-
 License
 -------
 
