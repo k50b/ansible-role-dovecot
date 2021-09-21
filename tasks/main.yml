@@ -1,0 +1,52 @@
+---
+- name: Install dovecot
+  apt:
+    name:
+      - dovecot-imapd
+      - dovecot-submissiond
+# - name: Check if stock configuration backup exists
+#   stat:
+#     path: /etc/dovecot/conf.d.stock/
+#   register: st
+# - name: Backup stock configuration
+#   copy:
+#     dest: /etc/dovecot/conf.d.stock/
+#     src: /etc/dovecot/conf.d/
+#     remote_src: true
+#   when: not st.stat.exists
+- name: Provide configuration
+  template:
+    src: '{{ item }}'
+    dest: '/etc/dovecot/conf.d/{{ item | regex_replace(''\.j2$'',"") }}'
+    backup: true
+  loop:
+    - '10-auth.conf.j2'
+    - '10-mail.conf.j2'
+    - '10-master.conf.j2'
+    - '20-submission.conf.j2'
+    - 'auth-passwdfile.conf.ext.j2'
+  notify: Reload dovecot
+- name: Ensure users table file exists
+  file:
+    path: /etc/dovecot/users
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    owner: root
+    group: dovecot
+    mode: "0640"
+  notify: Reload dovecot
+- name: Configure private key symlink
+  file:
+    state: link
+    src: '{{ dovecot_privkey_path }}'
+    dest: '/etc/dovecot/private/dovecot.key'
+    force: true
+  notify: Reload dovecot
+- name: Configure certificate symlink
+  file:
+    state: link
+    src: '{{ dovecot_cert_path }}'
+    dest: '/etc/dovecot/private/dovecot.pem'
+    force: true
+  notify: Reload dovecot

@@ -1,0 +1,5 @@
+---
+dovecot_mailbox_root_dir: /home/vmail
+dovecot_cert_path: /etc/ssl/certs/ssl-cert-snakeoil.pem
+dovecot_privkey_path: /etc/ssl/private/ssl-cert-snakeoil.key
+dovecot_submission_hostname: mail.example.com

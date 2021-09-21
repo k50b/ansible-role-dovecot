@@ -1,0 +1,17 @@
+galaxy_info:
+  author: mr_class
+  description: Dovecot
+
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags:
+    - dovecot
+
+dependencies: []
