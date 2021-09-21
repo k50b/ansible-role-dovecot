@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: dovecot
   author: mr_class
   description: Dovecot
 
