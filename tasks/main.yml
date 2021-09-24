@@ -4,16 +4,6 @@
     name:
       - dovecot-imapd
       - dovecot-submissiond
-# - name: Check if stock configuration backup exists
-#   stat:
-#     path: /etc/dovecot/conf.d.stock/
-#   register: st
-# - name: Backup stock configuration
-#   copy:
-#     dest: /etc/dovecot/conf.d.stock/
-#     src: /etc/dovecot/conf.d/
-#     remote_src: true
-#   when: not st.stat.exists
 - name: Provide configuration
   template:
     src: '{{ item }}'
@@ -26,12 +16,13 @@
     - '20-submission.conf.j2'
     - 'auth-passwdfile.conf.ext.j2'
   notify: Reload dovecot
-- name: Ensure users table file exists
-  file:
-    path: /etc/dovecot/users
-    state: touch
-    access_time: preserve
-    modification_time: preserve
+- name: Configure users
+  copy:
+    dest: /etc/dovecot/users
+    content: |
+      {% for v in dovecot_users %}
+      {{ v.login }}:{{ v.password }}:{{ v.uid }}:{{ v.gid }}::{{ v.home }}::
+      {% endfor %}
     owner: root
     group: dovecot
     mode: "0640"
